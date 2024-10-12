@@ -49,4 +49,25 @@ EmpRouter.get('/:eid',async (req,res)=>{
         res.status(400).json({error:"Please provide a valid id"})
     }
 })
+EmpRouter.put('/:eid',async (req,res)=>{
+    const eid = req.params.eid
+    const updateData = req.body
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    try{
+    const updatedEmployee = await Employee.findByIdAndUpdate(eid,updateData)
+
+
+    if (updateData.email && !emailRegex.test(updateData.email)) {
+        return res.status(400).json({ error: "Sorry, this email is invalid." });
+    }
+    if (!updatedEmployee) {
+        return res.status(404).json({ error: "Employee not found." });
+    }
+    return res.status(200).json({ message: "Employee updated successfully.", employee: updatedEmployee })
+    }
+    catch(e){
+        res.status(400).json({error:"There was an error updating the product"})
+    }
+
+})
 module.exports = EmpRouter
