@@ -5,10 +5,10 @@ const EmployeeSchema = new Schema({
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    position: { type: String, required: false },
-    salary: { type: Number, required: false },
-    date_of_joining: { type: Date, required: false },
-    department: { type: String, required: false },
+    position: { type: String, required: true },
+    salary: { type: Number, required: true },
+    date_of_joining: { type: Date, required: true },
+    department: { type: String, required: true },
 }, { timestamps: true });
 
 const Employee = mongoose.model("Employee", EmployeeSchema);
