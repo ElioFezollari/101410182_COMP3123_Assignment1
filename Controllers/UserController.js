@@ -12,7 +12,7 @@ userRouter.post('/signup',async (req,res)=>{
     if(!emailRegex.test(email)){
         return res.status(400).json({error:"Sorry this email is invalid"})
     }
-    const userExists = await User.findOne({email})
+    const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if(userExists){
         return res.status(400).json({error:"Sorry, this user already exists"})
     }
@@ -24,17 +24,18 @@ userRouter.post('/signup',async (req,res)=>{
 })
 
 userRouter.post('/login',async (req,res)=>{
-    const {email,password} = req.body
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email || !password){
-        return res.status(400).json({error:"Please make sure that you have submitted your password  and email"})
+    const { email, username, password } = req.body;
+    if ((!email && !username) || !password) {
+        return res.status(400).json({ error: "Please make sure that you have submitted your password and either email or username." });
     }
-    if(!emailRegex.test(email)){
-        return res.status(400).json({message:"Sorry this email is invalid"})
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ message: "Sorry, this email is invalid." });
     }
-    const user = await User.findOne({ email });
+
+
+    const user = await User.findOne({$or: [{ email: email },{ username: username }]});
     if(!user){
-        return res.status(404).json({message:"User with that email does not exist."})
+        return res.status(404).json({message:"User with that email or username  does not exist."})
     }
     const match = await bcrypt.compare(password,user.password)
     if(!match){
