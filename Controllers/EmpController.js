@@ -70,4 +70,19 @@ EmpRouter.put('/:eid',async (req,res)=>{
     }
 
 })
+
+EmpRouter.delete('/:eid',async (req,res)=>{
+    const eid = req.params.eid
+    try {
+        const deletedEmployee = await Employee.findByIdAndDelete(eid);
+
+        if (!deletedEmployee) {
+            return res.status(404).json({ message: "Employee not found." });
+        }
+
+        return res.status(200).json({ message: "Employee deleted successfully." });
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while deleting the employee." });
+    }
+})
 module.exports = EmpRouter
