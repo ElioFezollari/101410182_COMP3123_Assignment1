@@ -1,8 +1,8 @@
 const User = require('../Models/UserSchema');
 const bcrypt = require('bcrypt');
-const apiV1Router = require('express').Router();
+const userRouter = require('express').Router();
 const jwt = require('jsonwebtoken')
-apiV1Router.post('/user/signup',async (req,res)=>{
+userRouter.post('/signup',async (req,res)=>{
     const {password,username,email} = req.body
 
     if(!email || !username || !password){
@@ -23,7 +23,7 @@ apiV1Router.post('/user/signup',async (req,res)=>{
     res.status(201).json({message:"User created successfully","user_id":uploadedUser._id})
 })
 
-apiV1Router.post('/user/login',async (req,res)=>{
+userRouter.post('/login',async (req,res)=>{
     const {email,password} = req.body
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!email || !password){
@@ -44,4 +44,4 @@ apiV1Router.post('/user/login',async (req,res)=>{
     res.status(200).json({message:"Login successful.", jwt:jwtToken})
 
 })
-module.exports = apiV1Router
+module.exports = userRouter

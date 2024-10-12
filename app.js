@@ -1,12 +1,14 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose');
-const apiV1Router = require('./Controllers/api_v1_controller');
+const UserRouter = require('./Controllers/UserController');
+const EmpRouter = require('./Controllers/EmpController');
 require('dotenv').config()
 
 
 app.use(express.json());
-app.use('/api/v1',apiV1Router)
+app.use('/api/v1/user',UserRouter)
+app.use('/api/v1/emp/employees',EmpRouter)
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to db"))
