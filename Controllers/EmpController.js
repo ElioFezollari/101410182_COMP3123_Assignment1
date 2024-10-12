@@ -18,7 +18,7 @@ EmpRouter.post('',async (req,res)=>{
     }
 
     const employee = await Employee.findOne({email})
-    
+
     if(employee){
         return res.status(400).json({error:"This employee already exists in the system"})
     }
@@ -34,8 +34,19 @@ EmpRouter.post('',async (req,res)=>{
     });
     
     await newEmployee.save()
-    res.status(201).json({"message":"Employee created successfully.", "employee_id":newEmployee._id})
+    res.status(201).json({message:"Employee created successfully.", employee_id:newEmployee._id})
 })
 
-
+EmpRouter.get('/:eid',async (req,res)=>{
+    const eid = req.params.eid
+    try{
+    const employee = await Employee.findOne({_id: eid})
+    if(!employee){
+        res.status(404).json({error:"Employee does not exist."})
+    }
+    res.status(200).json(employee)}
+    catch(e){
+        res.status(400).json({error:"Please provide a valid id"})
+    }
+})
 module.exports = EmpRouter
