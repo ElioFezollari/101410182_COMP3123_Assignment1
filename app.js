@@ -8,9 +8,6 @@ require('dotenv').config()
 app.use(express.json());
 app.use('/api/v1',apiV1Router)
 
-app.get('/',(req,res)=>{
-    res.send('hi')
-})
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to db"))
     .catch(() => console.error("Error connecting to the database"))

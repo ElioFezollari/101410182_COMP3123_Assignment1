@@ -17,5 +17,3 @@ apiV1Router.post('/user/signup',async (req,res)=>{
     res.status(201).json({message:"User created successfully","user_id":uploadedUser._id})
     console.log(password,username,email)
 })
-
-module.exports = apiV1Router
