@@ -45,7 +45,7 @@ userRouter.post('/login', [
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-        return res.status(401).json({ status: false, message: "Password or email is wrong." });
+        return res.status(401).json({ status: false, message: "Password or email/username is wrong." });
     }
 
     const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1800s' });
