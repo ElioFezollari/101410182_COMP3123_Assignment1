@@ -12,6 +12,6 @@ app.use('/api/v1/emp/employees',EmpRouter)
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to db"))
-    .catch(() => console.error("Error connecting to the database"))
+    .catch((err) => console.error(err))
 
 module.exports={app}
