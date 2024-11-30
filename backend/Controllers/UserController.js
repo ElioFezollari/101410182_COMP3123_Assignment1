@@ -47,9 +47,46 @@ userRouter.post('/login', [
     if (!match) {
         return res.status(401).json({ status: false, message: "Password or email/username is wrong." });
     }
+    console.log(user)
+    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+    const refreshToken = jwt.sign({ userId: user._id},process.env.JWT_SECRET2,{expiresIn:"1d"})
 
-    const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1800s' });
+    res.cookie("jwt",refreshToken,{
+        httpOnly:true,
+        domain:undefined,
+        secure:false,
+        sameSite:"none",
+        maxAge:24 * 60 * 60 * 1000
+    })
 
-    res.status(200).json({ status: true, message: "Login successful.", jwt: jwtToken });
+    res.status(200).json({ status: true, message: "Login successful.", jwt: accessToken });
 });
+
+userRouter.get("/refresh",async (req,res)=>{
+    console.log(req)
+    console.log(req.cookies)
+    const refreshToken = req.cookies?.jwt;
+    if(!refreshToken){
+        return res.status(401).json({message:"Unauthorized"})
+    }
+    try{
+        const userT = jwt.verify(refreshToken,process.env.JWT_SECRET2)
+
+        const accessToken = jwt.sign({ userId: userT._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        return res.json({accessToken})
+    }
+    catch(e){
+        res.status(500).json({message:"Server error"})
+    }
+})
+
+userRouter.get('/logout',(res,req)=>{
+    try{
+        res.clearCookie("jwt")
+        res.status(200).json({message:"Logged out Successfully"})
+    }
+    catch(e){
+        res.status(500).json({message:"Server Error"})
+    }
+})
 module.exports = userRouter

@@ -39,6 +39,8 @@ EmpRouter.post('', [
     res.status(201).json({ status: true, message: "Employee created successfully.", employee_id: newEmployee._id });
 });
 
+
+
 EmpRouter.get('/:eid', [
     param('eid').isMongoId().withMessage('Invalid employee ID format.')
 ], async (req, res) => {
@@ -107,4 +109,5 @@ EmpRouter.delete('/:eid', [
         return res.status(500).json({ status: false, message: "An error occurred while deleting the employee." });
     }
 });
+
 module.exports = EmpRouter

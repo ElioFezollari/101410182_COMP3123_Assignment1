@@ -3,8 +3,10 @@ const app = express()
 const mongoose = require('mongoose');
 const UserRouter = require('./Controllers/UserController');
 const EmpRouter = require('./Controllers/EmpController');
+const cookieParser = require("cookie-parser")
 require('dotenv').config()
 
+app.use(cookieParser())
 
 app.use(express.json());
 app.use('/api/v1/user',UserRouter)
