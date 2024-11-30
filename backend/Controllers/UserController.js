@@ -28,12 +28,15 @@ userRouter.post('/login', [
     body('username').optional().notEmpty().withMessage('Username must not be empty.'),
     body('password').notEmpty().withMessage('Password must not be empty.')
 ], async (req, res) => {
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: false, message: errors.array().map(err => err.msg).join(', ') });
     }
 
+
     const { email, username, password } = req.body;
+    console.log(password)
 
     if ((!email && !username) || !password) {
         return res.status(400).json({ status: false, message: "Please make sure that you have submitted your password and either email or username." });
@@ -80,13 +83,13 @@ userRouter.get("/refresh",async (req,res)=>{
     }
 })
 
-userRouter.get('/logout',(res,req)=>{
+userRouter.get('/logout',(req,res)=>{
     try{
         res.clearCookie("jwt")
         res.status(200).json({message:"Logged out Successfully"})
     }
     catch(e){
-        res.status(500).json({message:"Server Error"})
+        res.status(500).json({message:"Server error"})
     }
 })
 module.exports = userRouter

@@ -4,7 +4,15 @@ const mongoose = require('mongoose');
 const UserRouter = require('./Controllers/UserController');
 const EmpRouter = require('./Controllers/EmpController');
 const cookieParser = require("cookie-parser")
+const cors = require("cors")
 require('dotenv').config()
+
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    credentials: true,              
+  };
+  
+  app.use(cors(corsOptions));
 
 app.use(cookieParser())
 
