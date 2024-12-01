@@ -41,20 +41,42 @@ let columns = [
     header: "Department",
     cell: (props) => <p>{props.getValue()}</p>
   },
-]
+];
 
 const Table = () => {
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]); 
   const [selectedEmployee, setSelectedEmployee] = useState(null); 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   
+  const [positionQuery, setPositionQuery] = useState(""); 
+  const [departmentQuery, setDepartmentQuery] = useState(""); 
+
   useEffect(() => {
-    getEmployees().then((result) => setEmployees(result));
+    getEmployees().then((result) => {
+      setEmployees(result);
+      setFilteredEmployees(result);
+    });
   }, []);
+  
+  const handleSearch = () => {
+    const lowercasedPositionQuery = positionQuery.toLowerCase();
+    const lowercasedDepartmentQuery = departmentQuery.toLowerCase();
+    
+    const filtered = employees.filter((employee) =>
+      employee.position.toLowerCase().includes(lowercasedPositionQuery) &&
+      employee.department.toLowerCase().includes(lowercasedDepartmentQuery)
+    );
+    setFilteredEmployees(filtered);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [positionQuery, departmentQuery]);
 
   const table = useReactTable({
-    data: employees,
+    data: filteredEmployees, 
     columns,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: "onChange"
@@ -75,19 +97,49 @@ const Table = () => {
     setIsDeleteModalOpen(true);
   };
 
-
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setSelectedEmployee(null);
   };
 
+  const handleDelete = (employee) => {
+    console.log(employee)
+    const updatedEmployees = employees.filter(emp => emp._id !== employee);
+    setEmployees(updatedEmployees);
+    setFilteredEmployees(updatedEmployees.filter(emp => 
+      emp.position.toLowerCase().includes(positionQuery.toLowerCase()) &&
+      emp.department.toLowerCase().includes(departmentQuery.toLowerCase())
+    ));
+    closeDeleteModal();
+  };
+
   return (
     <div>
+      <div className='header-wrapper'>
         <h1 className='list-of-emp'>List Of Employees</h1>
         <div className='add-emp'>
-        <Link to='/addEmployee'>Add Employee</Link>
+          <Link to='/addEmployee'>Add Employee</Link>
         </div>
-      {employees && (
+      </div>
+      <div className='utility-divs'>
+        <div className="search-bar">
+          <p>Filter Employee:</p>
+          <input 
+            type="text" 
+            placeholder="Search by position" 
+            value={positionQuery}
+            onChange={(e) => setPositionQuery(e.target.value)}
+          />
+          <input 
+            type="text" 
+            placeholder="Search by department" 
+            value={departmentQuery}
+            onChange={(e) => setDepartmentQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {filteredEmployees.length > 0 ? (
         <table className='emp-div'>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -135,6 +187,8 @@ const Table = () => {
             ))}
           </tbody>
         </table>
+      ) : (
+        <h2 className='no-emp'>Sorry, there are no employees matching your search criteria</h2>
       )}
 
       {isViewModalOpen && (
@@ -148,6 +202,7 @@ const Table = () => {
         <DeleteModal 
           employee={selectedEmployee} 
           onClose={closeDeleteModal} 
+          onDelete={handleDelete}
         />
       )}
     </div>

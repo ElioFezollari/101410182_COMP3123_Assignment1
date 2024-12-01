@@ -8,14 +8,15 @@ EmpRouter.get('', async (req, res) => {
 })
 
 EmpRouter.post('', [
-    body('first_name').notEmpty().withMessage('First name is required.'),
-    body('last_name').notEmpty().withMessage('Last name is required.'),
+    body('firstName').notEmpty().withMessage('First name is required.'),
+    body('lastName').notEmpty().withMessage('Last name is required.'),
     body('email').isEmail().withMessage('Invalid email format.'),
     body('position').notEmpty().withMessage('Position is required.'),
     body('salary').isNumeric().withMessage('Salary must be a number.'),
     body('dateOfJoining').isISO8601().withMessage('Date of joining must be a valid date.'),
     body('department').notEmpty().withMessage('Department is required.')
 ], async (req, res) => {
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ status: false, message: errors.array().map(err => err.msg).join(', ') });
@@ -26,8 +27,8 @@ EmpRouter.post('', [
         return res.status(400).json({ status: false, message: "This employee already exists in the system." });
     }
     const newEmployee = new Employee({
-        firstName: firstName,
-        lastName: lastName,
+        first_name: firstName,
+        last_name: lastName,
         email,
         position,
         salary,

@@ -1,18 +1,19 @@
 import React from 'react';
 import { deleteEmployee } from '../services/employees';
 
-const DeleteModal = ({ employee, onClose }) => {
+const DeleteModal = ({ employee, onClose, onDelete }) => {
   if (!employee) return null;
-
 
   const deleteUser = async () => {
     try {
       await deleteEmployee(employee._id); 
-      onClose(); 
+      onDelete(employee._id); 
+      onClose();
     } catch (error) {
       console.error("Error deleting employee:", error);
     }
   };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -26,8 +27,12 @@ const DeleteModal = ({ employee, onClose }) => {
           <p><strong>Date Joined:</strong> {employee.date_of_joining}</p>
           <p><strong>Department:</strong> {employee.department}</p>
         </div>
-        <button style={{marginLeft:10}} onClick={()=>deleteUser()} className='delete close-modal'>Delete</button>
-        <button className="close-modal"  onClick={onClose}>Close</button>
+        <button  onClick={deleteUser} className='delete close-modal'>
+          Delete
+        </button>
+        <button className="close-modal" style={{ marginLeft: 10 }} onClick={onClose}>
+          Close
+        </button>
       </div>
     </div>
   );

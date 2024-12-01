@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getEmployee, updateEmployee } from "../services/employees"
+import useAuth from "../hooks/useAuth"
 
 const Update = () => {
     const { id } = useParams()
@@ -14,6 +15,17 @@ const Update = () => {
     const [error, setError] = useState()
     const [updateError,setUpdateError] = useState()
     const [success,setSuccess] = useState()
+    const [exists,setExists] = useState(false)
+    const navigate = useNavigate()
+
+    const {auth,setAuth} = useAuth()
+    useEffect(() => {
+        if (!auth.accessToken) {
+            navigate('/');
+        }
+    }, [auth.jwt]);
+
+
     useEffect(() => {
         getEmployee(id)
             .then((res) => { 
@@ -24,12 +36,14 @@ const Update = () => {
                 setSalary(res.employee.salary)
                 setDateOfJoining(res.employee.date_of_joining)
                 setDepartment(res.employee.department)
+                setExists(true)
             })
             .catch((err) => { setError(err) })
     }, [id])
 
     const updateUser=async (e)=>{
         e.preventDefault()
+        try{
         const response = await updateEmployee(id,{email,first_name:firstName,last_name:lastName,position,salary,date_of_joining:dateOfJoining,department})
         if(response.status = true){
             setUpdateError(null)
@@ -38,12 +52,16 @@ const Update = () => {
         else{
             setSuccess(null)
             setUpdateError(response.message)
+        }}
+        catch(err){
+            setSuccess(null)
+            setUpdateError("Please make sure all forms are correct")
         }
     }
 
     return (
         <div>
-            {email ? <form className="uc-form" onSubmit={(e)=>updateUser(e)}>
+            {exists ? <form className="uc-form" onSubmit={(e)=>updateUser(e)}>
                 <h1>Update {email}</h1>
                 <div className="uc-div">
                 <div><label>Email: </label><input type="email" name="email" placeholder="email"  value={email} onChange={(e)=>setEmail(e.target.value)}/></div>

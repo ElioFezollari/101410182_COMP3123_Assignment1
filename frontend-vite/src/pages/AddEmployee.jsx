@@ -15,14 +15,19 @@ const AddEmployee = () =>{
 
     const addEmployee=async (e)=>{
         e.preventDefault()
-        const response = await createEmployee({email,first_name:firstName,last_name:lastName,position,salary,date_of_joining:dateOfJoining,department})
-        if(response.status = true){
-            setUpdateError(null)
-            setSuccess("Employee succesfully created")
-        }
-        else{
-            setSuccess(null)
-            setUpdateError(response.message)
+        try {
+            const response = await createEmployee({ email, firstName, lastName, position, salary, dateOfJoining, department });
+            
+            if (response.status === true) {
+                setUpdateError(null); 
+                setSuccess("Employee successfully created"); 
+            } else {
+                setSuccess(null); 
+                setUpdateError(response.message);
+            }
+        } catch (error) {
+            setSuccess(null); 
+            setUpdateError("Please fill all the forms correctly");
         }
     }
 
