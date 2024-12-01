@@ -165,7 +165,7 @@ header ul button:hover{
 
 /* Main Table Styling */
 .emp-div {
-  width: 80%;
+  width: 86%;
   margin: 0 auto;
   overflow-x: auto;
   border-radius: 8px;
@@ -181,6 +181,7 @@ header ul button:hover{
 
 
 th, td {
+  position: relative;
   border: 1px solid #ddd;
   padding: 10px;
   font-size: 14px;
@@ -224,4 +225,79 @@ th:hover {
 
 .tr:last-child td:last-child {
   border-bottom-right-radius: 8px; 
+}
+
+.table-btn{
+  width: 100%;
+  padding: 10px;
+  display: inline-block;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.update{
+  background-color: #FFB13B;
+}
+.delete{
+  background-color: #ff3b3b;
+}
+.update:hover{
+  background-color: #ffbf60;
+  cursor: pointer;
+}
+.delete:hover{
+  background-color: #ff5c5c;
+  cursor: pointer;
+}
+
+.view{
+
+  background-color: #7dff5c;
+}
+
+.view:hover{
+  background-color: #92fd78;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.close-modal {
+  background: #1B1B1F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  background: #282833;
 }
