@@ -7,6 +7,8 @@ import PersistLogin from './pages/PersistLogin';
 import Home from './pages/Home';
 import Layout from './components/Layout';
 import SignUp from './pages/SignUp';
+import Update from './pages/Update';
+import AddEmployee from './pages/AddEmployee';
 function App() {
 
 
@@ -27,6 +29,14 @@ function App() {
           {
             element: <Home />,
             path: '/home'
+          },
+          {
+            element:<Update/>,
+            path:"/update/:id"
+          },
+          {
+            element:<AddEmployee/>,
+            path:'/addEmployee'
           }
         ]
       }

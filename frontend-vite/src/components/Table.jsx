@@ -1,8 +1,9 @@
-import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table'
-import { Link, useNavigate } from "react-router-dom"
-import { useEffect, useState } from 'react'
-import getEmployees from '../services/employees'
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table';
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import getEmployees from '../services/employees';
 import ViewModal from './ViewModal'; 
+import DeleteModal from './DeleteModal'; 
 
 let columns = [
   {
@@ -40,14 +41,14 @@ let columns = [
     header: "Department",
     cell: (props) => <p>{props.getValue()}</p>
   },
-
 ]
 
 const Table = () => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null); 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
+  
   useEffect(() => {
     getEmployees().then((result) => setEmployees(result));
   }, []);
@@ -59,20 +60,33 @@ const Table = () => {
     columnResizeMode: "onChange"
   });
 
-
-  const openModal = (employee) => {
+  const openViewModal = (employee) => {
     setSelectedEmployee(employee);
-    setIsModalOpen(true);
+    setIsViewModalOpen(true);
+  };
+
+  const closeViewModal = () => {
+    setIsViewModalOpen(false);
+    setSelectedEmployee(null);
+  };
+
+  const openDeleteModal = (employee) => {
+    setSelectedEmployee(employee);
+    setIsDeleteModalOpen(true);
   };
 
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
     setSelectedEmployee(null);
   };
 
   return (
     <div>
+        <h1 className='list-of-emp'>List Of Employees</h1>
+        <div className='add-emp'>
+        <Link to='/addEmployee'>Add Employee</Link>
+        </div>
       {employees && (
         <table className='emp-div'>
           <thead>
@@ -88,9 +102,9 @@ const Table = () => {
                     />
                   </th>
                 ))}
+                <th>View</th>
                 <th>Update</th>
                 <th>Delete</th>
-                <th>View</th>
               </tr>
             ))}
           </thead>
@@ -103,19 +117,19 @@ const Table = () => {
                   </td>
                 ))}
                 <td>
-                  <button className="view table-btn" onClick={() => openModal(row.original)}>
+                  <button className="view table-btn" onClick={() => openViewModal(row.original)}>
                     View
                   </button>
                 </td>
                 <td>
-                <Link className="update table-btn" to={`/update/${row.original._id}`}>
+                  <Link className="update table-btn" to={`/update/${row.original._id}`}>
                     Update
                   </Link>
                 </td>
                 <td>
-                <Link className="delete table-btn" to={`/delete/${row.original._id}`}>
+                  <button className="delete table-btn" onClick={() => openDeleteModal(row.original)}>
                     Delete
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -123,10 +137,17 @@ const Table = () => {
         </table>
       )}
 
-      {isModalOpen && (
+      {isViewModalOpen && (
         <ViewModal 
           employee={selectedEmployee} 
-          onClose={closeModal} 
+          onClose={closeViewModal} 
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteModal 
+          employee={selectedEmployee} 
+          onClose={closeDeleteModal} 
         />
       )}
     </div>

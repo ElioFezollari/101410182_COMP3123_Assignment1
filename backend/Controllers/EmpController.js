@@ -8,8 +8,8 @@ EmpRouter.get('', async (req, res) => {
 })
 
 EmpRouter.post('', [
-    body('firstName').notEmpty().withMessage('First name is required.'),
-    body('lastName').notEmpty().withMessage('Last name is required.'),
+    body('first_name').notEmpty().withMessage('First name is required.'),
+    body('last_name').notEmpty().withMessage('Last name is required.'),
     body('email').isEmail().withMessage('Invalid email format.'),
     body('position').notEmpty().withMessage('Position is required.'),
     body('salary').isNumeric().withMessage('Salary must be a number.'),
@@ -76,6 +76,7 @@ EmpRouter.put('/:eid', [
     const eid = req.params.eid;
     const updateData = req.body;
 
+    console.log(updateData)
     try {
         const updatedEmployee = await Employee.findByIdAndUpdate(eid, updateData, { new: true });
 
