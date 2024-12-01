@@ -3,24 +3,44 @@ const bcrypt = require('bcrypt');
 const userRouter = require('express').Router();
 const jwt = require('jsonwebtoken')
 const { body,validationResult } = require('express-validator');
-userRouter.post('/signup', [body('email').optional().isEmail().withMessage('Invalid email format.'),
-                            body('username').optional().notEmpty().withMessage('Username must not be empty.'),
+userRouter.post('/signup', [body('email').notEmpty().isEmail().withMessage('Invalid email format.'),
+                            body('username').notEmpty().notEmpty().withMessage('Username must not be empty.'),
                             body('password').notEmpty().withMessage('Password must not be empty.')
 ], async (req, res) => {
+    console.log("hi")
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ status: false, message: errors.array().map(err => err.msg).join(', ') });
+        return res.status(400).json({
+            status: false,
+            message: errors.array()
+            .filter(err => err.msg !== 'Invalid value')
+                .map(err => err.msg)          
+                .join(' ')               
+        });
+        
     }
     const { password, username, email } = req.body
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
     if (userExists) {
-        return res.status(400).json({ error: "Sorry, this user already exists" })
+        return res.status(400).json({ message: "Sorry, this user already exists" })
     }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const uploadedUser = new User({ username, email, password: hashedPassword });
     await uploadedUser.save();
-    res.status(201).json({ message: "User created successfully", "user_id": uploadedUser._id })
+
+    const accessToken = jwt.sign({ userId: uploadedUser._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+    const refreshToken = jwt.sign({ userId: uploadedUser._id},process.env.JWT_SECRET2,{expiresIn:"1d"})
+
+    res.cookie("jwt",refreshToken,{
+        httpOnly:true,
+        domain:undefined,
+        secure:true,
+        sameSite:"none",
+        maxAge:24 * 60 * 60 * 1000
+    })
+
+    res.status(200).json({ status: true, message: "Registration successful.", jwt: accessToken });
 })
 
 userRouter.post('/login', [
@@ -31,7 +51,7 @@ userRouter.post('/login', [
     
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ status: false, message: errors.array().map(err => err.msg).join(', ') });
+        return res.status(400).json({ status: false, message: errors.array().map(err => err.msg).join(' ') });
     }
 
 
@@ -44,7 +64,7 @@ userRouter.post('/login', [
 
     const user = await User.findOne({ $or: [{ email: email }, { username: username }] });
     if (!user) {
-        return res.status(404).json({ status: false, message: "User with that email or username does not exist." });
+        return res.status(404).json({ status: false, message: "Password or email/username is wrong." });
     }
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
@@ -57,7 +77,7 @@ userRouter.post('/login', [
     res.cookie("jwt",refreshToken,{
         httpOnly:true,
         domain:undefined,
-        secure:false,
+        secure:true,
         sameSite:"none",
         maxAge:24 * 60 * 60 * 1000
     })
@@ -66,8 +86,8 @@ userRouter.post('/login', [
 });
 
 userRouter.get("/refresh",async (req,res)=>{
-    console.log(req)
-    console.log(req.cookies)
+
+
     const refreshToken = req.cookies?.jwt;
     if(!refreshToken){
         return res.status(401).json({message:"Unauthorized"})

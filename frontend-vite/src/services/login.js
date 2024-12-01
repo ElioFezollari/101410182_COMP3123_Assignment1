@@ -14,5 +14,15 @@ const logout = async()=>{
   return response
 }
 
+const signup = async (credentials) => {
+  try{
+    const response = await axios.post(baseUrl + "signup",credentials,{withCredentials:true});
+    return response
+  }
+  catch(error){
+    return error.response
+  }
+}
+
 export default login 
-export {logout}
+export {logout,signup}
