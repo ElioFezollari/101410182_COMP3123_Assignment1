@@ -1,7 +1,9 @@
+import Table from "../components/Table"
+
 const Home = () =>{
     return(
         <div>
-            hi
+            <Table/>
         </div>
     )
 }

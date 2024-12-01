@@ -26,8 +26,8 @@ EmpRouter.post('', [
         return res.status(400).json({ status: false, message: "This employee already exists in the system." });
     }
     const newEmployee = new Employee({
-        first_name: firstName,
-        last_name: lastName,
+        firstName: firstName,
+        lastName: lastName,
         email,
         position,
         salary,
