@@ -311,7 +311,7 @@ th:hover {
   flex-direction: column;
   background-color: #ddd;
   padding: 40px;
-  height: 70vh;
+  min-height: 70vh;
   width: 40vw;
   border-radius: 20px;
   justify-content: space-evenly;
@@ -413,4 +413,248 @@ div .add{
 
 .no-emp{
   color: white;
+}
+
+.utility-divs {
+  display: flex;
+  justify-content: space-evenly;
+  min-width: 70%;
+  margin: 0 auto;
+}
+
+.header-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.no-emp {
+  color: white;
+}
+
+@media (max-width: 768px) {
+
+
+
+  .login-wrapper, .signup-wrapper {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login, .signup {
+    width: 90%;
+    height: auto;
+    min-height: 400px;
+    border-radius: 0px;
+  }
+  .login-img,.register-img{
+    display: none;
+  }
+  .login-form, .signup-form {
+    width: 90%;
+    border-radius: 0;
+  }
+
+  .login-btn, .signup-btn {
+    width: 100%;
+  }
+
+  header ul li {
+    margin-right: 0;
+  }
+  header h1{
+    font-size: 20px;
+    margin-right: 40px;
+  }
+  .emp-div {
+    width: 100%;
+    max-width: 400px;
+    display: block;
+    overflow-y: auto;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+
+  .uc-form {
+    width: 90vw;
+    padding: 20px;
+  }
+
+  .search-bar input {
+    width: 70%;
+  }
+
+  .utility-divs {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .add-emp a {
+    width: 80%;
+  }
+  .header-wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+  .add-emp{
+    margin-left: 0;
+    margin-top: 20px;
+  }
+  .add-emp a{
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .search-bar{
+    flex-direction: column;
+    height: 200px;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .search-bar input,.search-bar p{
+    margin-right: 0;
+  }
+
+}
+
+@media (max-width: 480px) {
+  
+  .uc-div label{
+    font-size: 12px;
+  }
+
+  .emp-div {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    overflow-y: auto;
+  }
+
+  .uc-form h1{
+    margin-bottom: 10px;
+    word-break: break-all;
+  }
+  .uc-div div{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uc-form input[type="submit"]{
+    margin-top: 20px;
+  }
+
+
+  .login h1, .signup h1 {
+    font-size: 30px;
+  }
+
+  .login-form input,
+  .signup-form input {
+    padding: 12px;
+  }
+
+  .login-btn, .signup-btn {
+    width: 80%;
+  }
+
+  .login-form input, .signup-form input, .uc-form input[type="submit"] {
+    font-size: 16px;
+  }
+  .login-wrapper img{
+    width: auto;
+    height: auto;
+  }
+
+
+  header {
+    padding: 0 10px;
+  }
+
+  .search-bar input {
+    width: 60%;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .utility-divs {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  .login, .signup,.login-img,.login-wrapper img {
+    width: 100%;
+
+  }
+
+  .login-form, .signup-form {
+    width: 70%;
+  }
+
+  .login-btn, .signup-btn {
+    width: 80%;
+  }
+
+  .emp-div {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  th, td {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .modal-content {
+    width: 80%;
+  }
+
+
+  .search-bar input {
+    width: 80%;
+  }
+  .utility-divs {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .login-wrapper, .signup-wrapper {
+    height: 100vh;
+    flex-direction: row;
+  }
+
+  .login, .signup {
+    width: 500px;
+    height: 500px;
+    margin: 0;
+
+  }
+
+  .emp-div {
+    width: 80%;
+  }
+
+  .modal-content {
+    width: 500px;
+  }
+
+
 }
